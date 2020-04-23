@@ -30,10 +30,18 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.GET
+import retrofit2.http.Query
 import java.io.IOException
 
 
 private const val BASE_URL = "https://mars.udacity.com/"
+
+enum class MarsApiFilter (val value: String) {
+    SHOW_RENT("rent"),
+    SHOW_FORSALE("buy"),
+    SHOW_ALL("all")
+}
+
 /**
  * JSON Converter
  */
@@ -49,7 +57,7 @@ private val retrofit = Retrofit.Builder()
 
 interface MarsApiService {
     @GET("realestate")
-    suspend fun getProperties(): Response<List<MarsProperty>>
+    suspend fun getProperties(@Query("filter") type: String):  Response<List<MarsProperty>>
 }
 
 object MarsApi {
@@ -103,8 +111,4 @@ class NetworkConnectionInterceptor(val context: Context) : Interceptor {
 
 }
 
-// ADD THE API HELPER CLASS HERE
-// from https://blog.mindorks.com/using-retrofit-with-kotlin-coroutines-in-android
-//
-//class ApiHelper()
 

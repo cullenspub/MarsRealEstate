@@ -1,4 +1,4 @@
-package com.example.android.marsrealestate.utils
+package com.example.android.marsrealestate.network
 
 enum class Status {
     SUCCESS,

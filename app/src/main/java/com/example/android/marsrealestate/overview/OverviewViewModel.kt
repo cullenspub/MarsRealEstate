@@ -20,10 +20,7 @@ package com.example.android.marsrealestate.overview
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.android.marsrealestate.network.MarsApi
-import com.example.android.marsrealestate.network.MarsProperty
-import com.example.android.marsrealestate.utils.MarsApiStatus
-import com.example.android.marsrealestate.utils.Status
+import com.example.android.marsrealestate.network.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -51,25 +48,36 @@ class OverviewViewModel : ViewModel() {
     val status: LiveData<MarsApiStatus<List<MarsProperty>>>
         get() = _status
 
-//    // A Mars property
-//    private var _properties = MutableLiveData<List<MarsProperty>>()
-//    val properties: LiveData<List<MarsProperty>>
-//        get() = _properties
+    // LiveData to trigger navigation to detail view
+    private var _navigateToSelectedProperty = MutableLiveData<MarsProperty>()
+    val navigateToSelectedProperty: LiveData<MarsProperty>
+        get() = _navigateToSelectedProperty
+
 
     /**
      * Call getMarsRealEstateProperties() on init so we can display status immediately.
      */
     init {
-        getMarsRealEstatePropertiesV2()
+        getMarsRealEstatePropertiesV2(MarsApiFilter.SHOW_ALL)
+    }
+
+    // Function to set the selected LiveData property
+    fun displayPropertyDetails(marsProperty: MarsProperty) {
+        _navigateToSelectedProperty.value = marsProperty
+    }
+
+    // Function to reset the Mars property after navigation is complete
+    fun displayPropertyDetailsComplete() {
+        _navigateToSelectedProperty.value = null
     }
 
     /**
      * Using https://android.jlelse.eu/kotlin-coroutines-and-retrofit-e0702d0b8e8f as a guide for
      * invoking RetroFit >= 2.6 service
      */
-    fun getMarsRealEstatePropertiesV2() {
+    fun getMarsRealEstatePropertiesV2(filter: MarsApiFilter) {
         coroutineScope.launch {
-            val propertyResponse = MarsApi.retrofitService.getProperties()
+            val propertyResponse = MarsApi.retrofitService.getProperties(filter.value)
             withContext(Dispatchers.Main) {
                 try {
                     if (propertyResponse.isSuccessful) {
@@ -85,6 +93,11 @@ class OverviewViewModel : ViewModel() {
             }
         }
     }
+
+    fun updateFilter(filter: MarsApiFilter) {
+        getMarsRealEstatePropertiesV2(filter)
+    }
+
 
     override fun onCleared() {
         super.onCleared()
