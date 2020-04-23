@@ -17,9 +17,12 @@
 
 package com.example.android.marsrealestate.overview
 
+import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
+import com.example.android.marsrealestate.R
 import com.example.android.marsrealestate.network.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -35,7 +38,7 @@ import kotlinx.coroutines.launch
  * Code for Retrofit and Coroutines adapted from https://blog.mindorks.com/using-retrofit-with-kotlin-coroutines-in-android
  *
  */
-class OverviewViewModel : ViewModel() {
+class OverviewViewModel(private val application: Application) : ViewModel() {
 
     // Setup for using Coroutines
     private var viewModelJob = Job()
@@ -98,6 +101,15 @@ class OverviewViewModel : ViewModel() {
         getMarsRealEstatePropertiesV2(filter)
     }
 
+
+    fun displayablePropertyType(property: MarsProperty): String {
+            return application.applicationContext.getString(R.string.display_type,
+                    application.applicationContext.getString(
+                            when(property.isRental) {
+                                true -> R.string.type_rent
+                                false -> R.string.type_sale
+                            }))
+        }
 
     override fun onCleared() {
         super.onCleared()

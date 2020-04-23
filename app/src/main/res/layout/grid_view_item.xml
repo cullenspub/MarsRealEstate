@@ -26,14 +26,53 @@
             type="com.example.android.marsrealestate.network.MarsProperty" />
     </data>
 
-    <ImageView
-        android:id="@+id/mars_image"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="170dp"
-        android:adjustViewBounds="true"
-        android:cropToPadding="true"
-        android:padding="2dp"
-        android:scaleType="centerCrop"
-        app:imageUrl="@{property.imgSrcUrl}"
-        tools:src="@tools:sample/backgrounds/scenic" />
+        android:layout_height="match_parent"
+        android:background="#FFF">
+
+        <ImageView
+            android:id="@+id/mars_image"
+            android:layout_width="match_parent"
+            android:layout_height="170dp"
+            android:adjustViewBounds="true"
+            android:cropToPadding="true"
+            android:padding="2dp"
+            android:scaleType="centerCrop"
+            app:imageUrl="@{property.imgSrcUrl}"
+            tools:src="@tools:sample/backgrounds/scenic" />
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="match_parent"
+            android:layout_height="170dp"
+            android:cropToPadding="true"
+            android:padding="2dp"
+            app:srcCompat="@drawable/scrim" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="170dp">
+
+            <TextView
+                android:id="@+id/overlay_text"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="24dp"
+                android:layout_marginBottom="8dp"
+                android:fontFamily="sans-serif-smallcaps"
+                android:text="@{property.type}"
+                android:textAlignment="viewEnd"
+                android:textColor="@color/cardview_light_background"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:text="Rent Me" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </RelativeLayout>
+
 </layout>

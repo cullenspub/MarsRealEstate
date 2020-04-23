@@ -36,9 +36,7 @@ class OverviewFragment : Fragment() {
     /**
      * Lazily initialize our [OverviewViewModel].
      */
-    private val viewModel: OverviewViewModel by lazy {
-        ViewModelProvider(this).get(OverviewViewModel::class.java)
-    }
+    private lateinit var viewModel: OverviewViewModel
 
     /**
      * Inflates the layout with Data Binding, sets its lifecycle owner to the OverviewFragment
@@ -47,6 +45,9 @@ class OverviewFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         val binding = FragmentOverviewBinding.inflate(inflater)
+        val application = requireNotNull(activity).application
+        val viewModelFactory = OverviewViewModelFactory(application)
+        val viewModel = ViewModelProvider(this, viewModelFactory).get(OverviewViewModel::class.java)
         binding.photosGrid.adapter = PhotoGridAdapter(PhotoGridAdapter.OnClickListener { marsProperty ->
             viewModel.displayPropertyDetails(marsProperty)
         })
